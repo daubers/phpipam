@@ -778,3 +778,40 @@ UPDATE `lang` SET `l_code` = 'en_US.UTF-8' WHERE `l_code` = 'en_US.UTF8';
 
 /* Russian traslation */
 INSERT INTO `lang` (`l_name`, `l_code`) VALUES ('Russian', 'ru_RU.UTF-8');
+
+/* Ansible dynamic hosts tables */
+CREATE TABLE `ansibleHostGroups` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(256) DEFAULT NULL,
+  `description` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `ansibleOptions` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(256) DEFAULT NULL,
+  `value` varchar(256) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `ansibleHostGroupsOptions` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `group`  int(11) unsigned,
+  `option`  int(11) unsigned,
+  INDEX group_ind (`group`),
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`group`)
+    REFERENCES ansibleHostGroups(id)
+    ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `ansibleHosts` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `ipaddress` int(11) NOT NULL,
+  `group` int(11) unsigned,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`group`)
+    REFERENCES ansibleHostGroups(id),
+  FOREIGN KEY (`ipaddress`)
+    REFERENCES ipaddresses(`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
