@@ -1,0 +1,56 @@
+server {
+    server_name phpipam;
+    access_log /vagrant/logs/access.log;
+    error_log /vagrant/logs/error.log;
+    root /vagrant/;
+
+    location /css {
+      try_files $uri $uri/ =404;
+    }
+
+    location /js {
+        try_files $uri $uri/ =404;
+    }
+
+    location / {
+        rewrite ^/login/dashboard/?$ /dashboard/ redirect;
+        rewrite ^/logout/dashboard/?$ /dashboard/ redirect;
+        rewrite ^/tools/search/(.*)/(.*)/(.*)/(.*)/(.*)$ /index.php?page=tools&section=search&addresses=$1&subnets=$2&vlans=$3&vrf=$4&ip=$5 last;
+        rewrite ^/tools/search/(.*)$ /index.php?page=tools&section=search&ip=$1 last;
+        rewrite ^/(.*)/(.*)/(.*)/(.*)/([^/]+)/? /index.php?page=$1&section=$2&subnetId=$3&sPage=$4&ipaddrid=$5 last;
+        rewrite ^/(.*)/(.*)/(.*)/([^/]+)/? /index.php?page=$1&section=$2&subnetId=$3&sPage=$4 last;
+        rewrite ^/(.*)/(.*)/([^/]+)/? /index.php?page=$1&section=$2&subnetId=$3 last;
+        rewrite ^/(.*)/([^/]+)/? /index.php?page=$1&section=$2 last;
+        rewrite ^/([^/]+)/? /index.php?page=$1 last;
+        rewrite ^/? /index.php;
+    }
+
+    location /api {
+        rewrite ^/api/(.*)/(.*)/(.*)/(.*)/(.*) /api/index.php?app_id=$1&controller=$2&id=$3&id2=$4&id3=$5 last;
+        rewrite ^/api/(.*)/(.*)/(.*)/(.*) /api/index.php?app_id=$1&controller=$2&id=$3&id2=$4 last;
+        rewrite ^/api/(.*)/(.*)/(.*) /api/index.php?app_id=$1&controller=$2&id=$3 last;
+        rewrite ^/api/(.*)/(.*) /api/index.php?app_id=$1&controller=$2 last;
+        rewrite ^/api/(.*) /api/index.php?app_id=$1 last;
+    }
+
+
+    location ~ \.php$ {
+        try_files $uri =404;
+        include /etc/nginx/fastcgi_params;
+        fastcgi_pass 127.0.0.1:9000;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME /vagrant/$fastcgi_script_name;
+    }
+
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
+        try_files $uri /index.php;
+        expires max;
+        log_not_found off;
+    }
+
+    location = /_.gif {
+        expires max;
+        empty_gif;
+    }
+
+}

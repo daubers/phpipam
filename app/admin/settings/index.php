@@ -194,7 +194,19 @@ $(document).ready(function() {
 	<th colspan="3"><h4><?php print _('Feature settings'); ?></h4></th>
 </tr>
 
-<!-- API -->
+<!-- Ansible -->
+<tr>
+    <td class="title"><?php print _('Ansible dynamic hosts module'); ?></td>
+    <td>
+        <input type="checkbox" class="input-switch" value="1" name="enableAnsible" <?php if($settings['enableAnsible'] == 1) print 'checked'; ?>>
+    </td>
+    <td class="info2">
+        <?php print _('Enable or disable ansible dynamic hosts'); ?>
+    </td>
+</tr>
+
+
+    <!-- API -->
 <tr>
 	<td class="title"><?php print _('API'); ?></td>
 	<td>

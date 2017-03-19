@@ -63,6 +63,7 @@ $values = array("id"=>1,
 				"siteAdminName"       =>@$_POST['siteAdminName'],
 				"siteAdminMail"       =>@$_POST['siteAdminMail'],
 				//features
+    			"enableAnsible"             =>$Admin->verify_checkbox(@$_POST['enableAnsible']),
 				"api"                 =>$Admin->verify_checkbox(@$_POST['api']),
 				"enableIPrequests"    =>$Admin->verify_checkbox(@$_POST['enableIPrequests']),
 				"enableMulticast"     =>$Admin->verify_checkbox(@$_POST['enableMulticast']),

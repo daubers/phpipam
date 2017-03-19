@@ -1,0 +1,89 @@
+- name: Install php5-gmp
+  apt:
+    name: php5-gmp
+  become: yes
+
+- name: Install php5-gd
+  apt:
+    name: php5-gd
+  become: yes
+
+- name: Install php5-curl
+  apt:
+    name: php5-curl
+  become: yes
+
+- name: Install php5-mcrypt
+  apt:
+    name: php5-mcrypt
+  become: yes
+
+- name: Install php-pear
+  apt:
+    name: php-pear
+  become: yes
+
+- name: Install php5-mysql
+  apt:
+    name: php5-mysql
+  become: yes
+
+- name: Install php5-ldap
+  apt:
+    name: php5-ldap
+  become: yes
+
+- name: Install python-mysqldb
+  apt:
+    name: python-mysqldb
+  become: yes
+
+- name: Create a new database with name 'phpipam'
+  mysql_db:
+    name: phpipam
+    state: present
+  become: yes
+
+- mysql_user:
+    name: phpipam
+    password: phpipamadmin
+    priv: '*.*:ALL'
+    state: present
+  become: yes
+
+- name: Fix /vagrant/logs
+  file:
+    path: /vagrant/logs
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: 0777
+  become: yes
+
+- name: Place nginx config
+  template: src=nginxsite.j2 dest=/etc/nginx/sites-enabled/phpipam
+  become: yes
+
+- name: Remove old nginx config
+  file:
+      state: absent
+      path: "/etc/nginx/sites-enabled/default"
+  become: yes
+
+- name: Restart nginx
+  service:
+    name: nginx
+    state: restarted
+  become: yes
+
+- name: stop fastcgi
+  service:
+    name: php-fastcgi
+    state: stopped
+  become: yes
+
+- name: start fastcgi
+  service:
+    name: php-fastcgi
+    state: started
+  become: yes

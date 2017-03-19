@@ -815,3 +815,5 @@ CREATE TABLE `ansibleHosts` (
   FOREIGN KEY (`ipaddress`)
     REFERENCES ipaddresses(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `settings` ADD `enableAnsible` TINYINT(1)  NULL  DEFAULT '0';
